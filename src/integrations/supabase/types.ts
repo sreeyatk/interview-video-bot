@@ -14,7 +14,134 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      interview_responses: {
+        Row: {
+          ai_feedback: string | null
+          ai_score: number | null
+          audio_transcript: string | null
+          audio_url: string | null
+          created_at: string
+          difficulty: string
+          id: string
+          interview_id: string
+          question_number: number
+          question_text: string
+          response_duration_seconds: number | null
+          video_url: string | null
+        }
+        Insert: {
+          ai_feedback?: string | null
+          ai_score?: number | null
+          audio_transcript?: string | null
+          audio_url?: string | null
+          created_at?: string
+          difficulty: string
+          id?: string
+          interview_id: string
+          question_number: number
+          question_text: string
+          response_duration_seconds?: number | null
+          video_url?: string | null
+        }
+        Update: {
+          ai_feedback?: string | null
+          ai_score?: number | null
+          audio_transcript?: string | null
+          audio_url?: string | null
+          created_at?: string
+          difficulty?: string
+          id?: string
+          interview_id?: string
+          question_number?: number
+          question_text?: string
+          response_duration_seconds?: number | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interview_responses_interview_id_fkey"
+            columns: ["interview_id"]
+            isOneToOne: false
+            referencedRelation: "interviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      interviews: {
+        Row: {
+          ai_review: string | null
+          candidate_name: string
+          category: Database["public"]["Enums"]["interview_category"]
+          completed_at: string | null
+          created_at: string
+          current_question: number
+          id: string
+          overall_score: number | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["interview_status"]
+          total_questions: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_review?: string | null
+          candidate_name: string
+          category: Database["public"]["Enums"]["interview_category"]
+          completed_at?: string | null
+          created_at?: string
+          current_question?: number
+          id?: string
+          overall_score?: number | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["interview_status"]
+          total_questions?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_review?: string | null
+          candidate_name?: string
+          category?: Database["public"]["Enums"]["interview_category"]
+          completed_at?: string | null
+          created_at?: string
+          current_question?: number
+          id?: string
+          overall_score?: number | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["interview_status"]
+          total_questions?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +150,14 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      interview_category:
+        | "java"
+        | "python"
+        | "frontend"
+        | "php"
+        | "react"
+        | "nodejs"
+      interview_status: "pending" | "in_progress" | "completed" | "analyzed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +284,16 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      interview_category: [
+        "java",
+        "python",
+        "frontend",
+        "php",
+        "react",
+        "nodejs",
+      ],
+      interview_status: ["pending", "in_progress", "completed", "analyzed"],
+    },
   },
 } as const
