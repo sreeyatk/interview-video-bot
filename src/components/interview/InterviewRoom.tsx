@@ -10,7 +10,7 @@ import { Interview, InterviewCategory } from '@/hooks/useInterview';
 import { getQuestions, getCategoryLabel } from '@/lib/questions';
 import { 
   Mic, MicOff, Video, VideoOff, Volume2, VolumeX, 
-  Play, Square, ArrowRight, CheckCircle, Loader2, AlertCircle 
+  Play, Square, ArrowRight, CheckCircle, Loader2, AlertCircle, SkipForward
 } from 'lucide-react';
 
 interface InterviewRoomProps {
@@ -61,7 +61,7 @@ export function InterviewRoom({ interview, onSaveResponse, onComplete }: Intervi
   useEffect(() => {
     if (stream && !hasStartedRef.current) {
       hasStartedRef.current = true;
-      setTimeout(askQuestion, 1000);
+      setTimeout(askQuestion, 500);
     }
   }, [stream, askQuestion]);
 
@@ -70,6 +70,32 @@ export function InterviewRoom({ interview, onSaveResponse, onComplete }: Intervi
     setSavedTranscript('');
     await startRecording();
     startListening();
+  };
+
+  const handleSkipQuestion = async () => {
+    setPhase('processing');
+    
+    await onSaveResponse(
+      currentQuestionIndex + 1,
+      currentQuestion.text,
+      currentQuestion.difficulty,
+      '[Question skipped]',
+      undefined,
+      0
+    );
+
+    if (currentQuestionIndex < questions.length - 1) {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentQuestionIndex(prev => prev + 1);
+        setIsTransitioning(false);
+        setSavedTranscript('');
+        setPhase('ready');
+        setTimeout(askQuestion, 200);
+      }, 500);
+    } else {
+      onComplete();
+    }
   };
 
   const handleStopAnswer = async () => {
@@ -95,8 +121,8 @@ export function InterviewRoom({ interview, onSaveResponse, onComplete }: Intervi
         setIsTransitioning(false);
         setSavedTranscript('');
         setPhase('ready');
-        setTimeout(askQuestion, 500);
-      }, 1000);
+        setTimeout(askQuestion, 200);
+      }, 500);
     } else {
       onComplete();
     }
@@ -135,7 +161,8 @@ export function InterviewRoom({ interview, onSaveResponse, onComplete }: Intervi
               autoPlay
               muted
               playsInline
-              className="w-full h-full object-cover scale-x-[-1]"
+              style={{ transform: 'scaleX(-1)' }}
+              className="w-full h-full object-cover"
             />
             
             {/* Recording indicator */}
@@ -236,14 +263,25 @@ export function InterviewRoom({ interview, onSaveResponse, onComplete }: Intervi
           {/* Controls */}
           <div className="flex flex-col gap-4">
             {phase === 'ready' && !isSpeaking && (
-              <Button 
-                size="lg" 
-                onClick={handleStartAnswer}
-                className="w-full h-14 text-lg gap-2"
-              >
-                <Play className="w-5 h-5" />
-                Start Your Answer
-              </Button>
+              <div className="flex gap-3">
+                <Button 
+                  size="lg" 
+                  onClick={handleStartAnswer}
+                  className="flex-1 h-14 text-lg gap-2"
+                >
+                  <Play className="w-5 h-5" />
+                  Start Your Answer
+                </Button>
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  onClick={handleSkipQuestion}
+                  className="h-14 text-lg gap-2 px-6"
+                >
+                  <SkipForward className="w-5 h-5" />
+                  Skip
+                </Button>
+              </div>
             )}
 
             {phase === 'speaking' && (
