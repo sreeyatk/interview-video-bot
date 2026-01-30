@@ -47,7 +47,7 @@ export function CategorySelector({ onSelect }: CategorySelectorProps) {
                 <h3 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
                   {category.name}
                 </h3>
-                <p className="text-sm text-muted-foreground mt-1">10 questions</p>
+                <p className="text-sm text-muted-foreground mt-1">5 questions</p>
               </CardContent>
             </Card>
           </motion.div>
