@@ -135,7 +135,7 @@ export function InterviewRoom({ interview, onSaveResponse, onComplete }: Intervi
               autoPlay
               muted
               playsInline
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover scale-x-[-1]"
             />
             
             {/* Recording indicator */}

@@ -56,7 +56,7 @@ export function useInterview() {
           candidate_name: candidateName,
           category: category,
           status: 'pending',
-          total_questions: 10
+          total_questions: 5
         })
         .select()
         .single();
